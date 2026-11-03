@@ -36,6 +36,32 @@ python scripts/download_commonvoice_tr.py \
   --require-speaker-id
 ```
 
+2026 Common Voice 27.0 Türkçe arşiviyle kullanılan final akış:
+
+```bash
+python scripts/download_commonvoice_tr.py \
+  --source-dir dataset/commonvoice_27_tr_source \
+  --output dataset/commonvoice_27_tr_fixed \
+  --all \
+  --require-speaker-id
+
+python scripts/create_turkish_manifest.py \
+  --root dataset \
+  --exclude-source commonvoice_17_tr_fixed \
+  --speaker-disjoint \
+  --output dataset/turkish_speaker_disjoint_manifest_commonvoice27.jsonl
+
+python scripts/validate_manifest.py \
+  dataset/turkish_speaker_disjoint_manifest_commonvoice27.jsonl \
+  --require-speaker-id \
+  --speaker-disjoint
+```
+
+Bu arşivden 64.808 kayıt WAV olarak dışa aktarılmıştır. Eski
+`commonvoice_17_tr_fixed` kopyası `client_id` içermediği için final
+speaker-disjoint manifestten çıkarılmıştır. Final manifest 76.707 kayıt içerir
+ve splitler arasında speaker kesişimi yoktur.
+
 ## Manifest üretimi
 
 ```bash

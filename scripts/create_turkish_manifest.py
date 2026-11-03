@@ -11,7 +11,12 @@ from pathlib import Path
 
 
 SYNTHETIC_NAMES = {"mlaad", "girenit-tts-tr-synthetic", "synthetic_turkish_tts_data"}
-REAL_NAMES = {"fleurs_tr", "commonvoice_17_tr_fixed", "commonvoice"}
+REAL_NAMES = {
+    "fleurs_tr",
+    "commonvoice_17_tr_fixed",
+    "commonvoice_27_tr_fixed",
+    "commonvoice",
+}
 
 
 def split_for(path: Path) -> str | None:
@@ -165,6 +170,7 @@ def main() -> int:
     source_manifests = (
         args.root / "commonvoice_tr_manifest.jsonl",
         args.root / "commonvoice_17_tr_fixed" / "commonvoice_tr_manifest.jsonl",
+        args.root / "commonvoice_27_tr_fixed" / "commonvoice_tr_manifest.jsonl",
     )
     for metadata_path in source_manifests:
         if not metadata_path.is_file():

@@ -10,7 +10,6 @@ from pathlib import Path
 
 import numpy as np
 import soundfile as sf
-from datasets import Audio, load_dataset
 
 
 def read_audio(path: Path) -> tuple[np.ndarray, int]:
@@ -31,6 +30,7 @@ def read_audio(path: Path) -> tuple[np.ndarray, int]:
 
 def export_official_archive(args: argparse.Namespace) -> int:
     source = args.source_dir.resolve()
+    source_name = args.output.name
     clips = source / "clips"
     if not clips.is_dir():
         raise SystemExit(f"Common Voice clips klasörü bulunamadı: {clips}")
@@ -64,8 +64,8 @@ def export_official_archive(args: argparse.Namespace) -> int:
                     "path": str(target.resolve()),
                     "split": split,
                     "label": 1,
-                    "source": "commonvoice_17_tr_fixed",
-                    "generator": "commonvoice_17_tr_fixed",
+                    "source": source_name,
+                    "generator": source_name,
                 }
                 if speaker_id:
                     row["speaker_id"] = speaker_id
@@ -100,6 +100,13 @@ def main() -> int:
     args = parser.parse_args()
     if args.source_dir:
         return export_official_archive(args)
+    try:
+        from datasets import Audio, load_dataset
+    except ImportError as error:
+        raise SystemExit(
+            "HF kaynağı için 'datasets' paketi gerekli; resmi arşiv aktarımında "
+            "--source-dir kullanın."
+        ) from error
     args.output.mkdir(parents=True, exist_ok=True)
     rows = []
     for split in args.splits:

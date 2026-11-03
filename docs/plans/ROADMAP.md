@@ -11,7 +11,7 @@ eder.
 |---|---|
 | GitHub repo yapısı | ✅ Tamamlandı |
 | Türkçe veri hazırlama | ✅ İlk tam sürüm hazır |
-| Common Voice TR | 🟡 44.790 WAV mevcut; speaker metadata’sı için resmi arşiv bekleniyor |
+| Common Voice TR | ✅ 64.808 WAV; `client_id` metadata’sı korundu |
 | MLAAD Türkçe | ✅ 7.000 WAV indirildi |
 | FLEURS TR ve girenit | ✅ Yerel veri mevcut |
 | Türkçe manifest | ✅ 56.689 kayıtla üretildi |
@@ -86,9 +86,9 @@ eder.
 - [x] `client_id` içeren resmi Common Voice arşivinden yeniden dışa aktarım
       aracını ekle. Mozilla Data Collective arşivi indirildiğinde `--source-dir`
       ve `--require-speaker-id` ile çalışır.
-- [ ] Resmi Common Voice arşivini Mozilla Data Collective’den indirip tam
-      speaker-disjoint split’i üret. Mevcut `ysdede/commonvoice_17_tr_fixed`
-      kopyası bu alanı içermiyor.
+- [x] Resmi Common Voice 27.0 arşivini Mozilla Data Collective’den dışa aktar,
+      eski metadata’sız kopyayı dışarıda bırak ve tam speaker-disjoint split’i
+      üret.
 - [x] `--holdout-generator` ile TTS üreticisi-disjoint deney akışını doğrula.
 - [x] Yedi TTS üreticisi için holdout manifestlerini üret ve doğrula.
 - [x] Holdout dev splitlerinde yüksek sınıf oranını tespit edip holdout dışı
@@ -161,6 +161,33 @@ işlem beklenen şekilde açık hata veriyor. FLEURS, MLAAD ve Girenit kaynaklar
 Collective erişimi olan resmi arşivin indirilmesinden sonra tamamlanacak;
 bu dış veri erişimi gereksinimi kod veya mevcut WAV’lar üzerinden çözülebilecek
 bir eksiklik değildir.
+
+Arşiv aktarımı daha sonra tamamlandı. `cv-corpus-27.0-2026-09-11-tr.tar.gz`
+arşivindeki train/dev/test TSV dosyalarında toplam 64.808 kullanılabilir kayıt
+bulundu ve kayıtların tamamında `client_id` mevcuttu. MP3 kayıtları
+`dataset/commonvoice_27_tr_fixed/` altında WAV olarak üretildi. Eski
+`commonvoice_17_tr_fixed` kopyası speaker metadata’sı olmadığı için final
+manifestten çıkarıldı.
+
+Üretilen final manifest:
+
+```text
+dataset/turkish_speaker_disjoint_manifest_commonvoice27.jsonl
+```
+
+Final doğrulama özeti:
+
+| Split | Kayıt | Gerçek | Sentetik | Speaker |
+|---|---:|---:|---:|---:|
+| train | 19.846 | 17.554 | 2.292 | 449 |
+| dev | 25.160 | 22.160 | 3.000 | 1.252 |
+| test | 31.701 | 28.701 | 3.000 | 1.873 |
+
+- Train/dev speaker kesişimi: `0`
+- Train/test speaker kesişimi: `0`
+- Dev/test speaker kesişimi: `0`
+- Eksik ses dosyası: `0`
+- `validate_manifest.py --require-speaker-id --speaker-disjoint`: başarılı
 
 #### TTS üreticisi holdout dengeleme raporu
 
