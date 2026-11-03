@@ -4,6 +4,7 @@ __pycache__/
 *.so
 .Python
 .venv/
+.venv-*/
 venv/
 env/
 ENV/
@@ -17,10 +18,13 @@ ENV/
 .vscode/*
 !.vscode/settings.json
 .pytest_cache/
-.mypy_cache/
 .ruff_cache/
+.mypy_cache/
 .cache/
 *.log
+logs/
+_hf_cache/
+tools/
 
 # Training outputs and checkpoints
 exp_result/

@@ -10,8 +10,14 @@
 ## Kontroller
 
 ```bash
-python -m compileall -q aasist-source
+make check
+make compile
 ```
+
+`make check` bağımlılık gerektirmeyen repo yapısı, manifest JSONL biçimi ve
+Python sözdizimi kontrolünü birlikte çalıştırır. `make compile` yalnızca
+Python derleme kontrolünü tekrarlar; Make kurulu değilse aynı komutları
+doğrudan `python3` ile çalıştırabilirsiniz.
 
 Model eğitimi ve değerlendirmesi veri seti ile GPU gerektirebilir; çalıştırılan
 komutları ve kullanılan yapılandırmayı pull request açıklamasında belirtin.
