@@ -6,6 +6,8 @@
 2. Veri setlerini, model ağırlıklarını, sanal ortamları veya deney çıktılarını
    commit etmeyin.
 3. Veri setlerinin lisans ve atıf koşullarını koruyun.
+4. Güncel kullanım ve komut değişikliklerini kök `README.md` ile ilgili
+   alt README dosyalarında birlikte güncelleyin.
 
 ## Kontroller
 
@@ -21,6 +23,8 @@ doğrudan `python3` ile çalıştırabilirsiniz.
 
 Model eğitimi ve değerlendirmesi veri seti ile GPU gerektirebilir; çalıştırılan
 komutları ve kullanılan yapılandırmayı pull request açıklamasında belirtin.
+Dokümantasyon değişikliklerinde hangi akışın ve hangi platformun doğrulandığını
+ayrıca belirtin.
 
 ## Pull request
 

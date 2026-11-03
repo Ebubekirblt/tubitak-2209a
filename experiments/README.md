@@ -1,32 +1,30 @@
 # Deney çıktıları
 
-Türkçe eğitim scriptinin checkpoint ve yerel deney çıktıları bu klasörde
-tutulur. Dosyalar geçicidir; Git’e eklenmez.
+Bu klasör yerel eğitim checkpoint’lerini, metrikleri, pipeline özetlerini ve
+TensorBoard çıktısını tutar. Büyük deney çıktıları Git’e eklenmez.
 
-Türkçe eğitim çıktıları varsayılan olarak şu alt klasörlerde oluşur:
+## Varsayılan çıktı yapısı
 
 ```text
-experiments/turkish/AASIST/
-experiments/turkish/AASIST-L/
-experiments/turkish/RawNet2Spoof/
-experiments/turkish/RawNetGatSpoofST/
+experiments/
+└── turkish/
+    ├── AASIST/
+    ├── AASIST-L/
+    ├── RawNet2Spoof/
+    ├── RawNetGatSpoofST/
+    ├── XLSR/
+    └── run_summary.json
 ```
 
-Deney sonuçlarını paylaşırken kullanılan manifest, config, epoch sayısı,
-batch size ve donanım bilgisini ayrıca kaydedin. Mevcut eğitim scripti her
-model klasörüne `best.pth` yazar; eğitim metriklerini terminalde gösterir.
-Ayrıca aynı klasöre `metrics.json` yazar.
+`train_turkish.py` model klasörüne checkpoint ve `metrics.json` yazar.
+`run_turkish_pipeline.py` çalıştırılan manifest, model ve seçenekleri
+`run_summary.json` içinde kaydeder.
 
-Not: `aasist-source/main.py` eski ASVspoof uyumlu akıştır ve varsayılan
-çıktısını `aasist-source/exp_result/` altında oluşturur. Türkçe deneylerde bu
-dosya kullanılmaz; `scripts/train_turkish.py` kullanılmalıdır.
+Deney paylaşırken manifest yolu/sürümü, config, model ağırlığı, epoch, batch
+size, seed, cihaz ve metrikleri birlikte belirtin. Test kümesini eğitimde
+kullanmayın; telefon kanalı ve görülmemiş üretici sonuçlarını temiz test
+sonuçlarından ayrı raporlayın.
 
-`scripts/run_turkish_pipeline.py` ile oluşturulan `run_summary.json`, hangi
-manifest ve modellerle çalışıldığını kaydeder.
-
-XLS-R çıktıları `experiments/turkish/XLSR/` altında tutulur; model ve
-`metrics.json` dosyası birlikte saklanır.
-
-Telefon kanalı deneyi için `dataset/turkish_phone_manifest.jsonl` kullanılır.
-Bu deneyin amacı temiz ses ile telefon kanalı sesindeki performans farkını
-ölçmektir; sonuçları temiz test kümesiyle karıştırmayın.
+Eski `aasist-source/main.py` ASVspoof uyumlu akışa aittir ve çıktısını
+`aasist-source/exp_result/` altında oluşturabilir. Türkçe deneylerde bunun
+yerine `scripts/run_turkish_pipeline.py` kullanın.

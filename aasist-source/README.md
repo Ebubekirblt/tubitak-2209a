@@ -1,4 +1,27 @@
-# AASIST
+# AASIST kaynak kodu
+
+Bu klasör upstream AASIST kodunun proje içindeki kopyasıdır. Türkçe deneyler
+için komutları depo kökünden çalıştırın; güncel akış kökteki
+[`README.md`](../README.md) ve [`scripts/README.md`](../scripts/README.md)
+dosyalarında bulunur.
+
+## Bu projede hangi akış kullanılmalı?
+
+Türkçe veri için:
+
+```bash
+python scripts/run_turkish_pipeline.py \
+  --models AASIST \
+  --extract-archives \
+  --epochs 1 \
+  --batch-size 4
+```
+
+Tek model eğitimi için `scripts/train_turkish.py`, Türkçe manifest üretimi için
+`scripts/create_turkish_manifest.py` kullanılır.
+
+> `main.py` ve `data_utils.py` eski ASVspoof2019 veri düzenine aittir.
+> ASVspoof veri setleri bu TÜBİTAK projesinin Türkçe deney akışında kullanılmaz.
 
 > This checkout is used by the parent project for Turkish-only experiments.
 > The original ASVspoof dataset workflow described below is not used here.

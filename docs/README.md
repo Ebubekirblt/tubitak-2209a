@@ -1,33 +1,21 @@
 # Proje belgeleri
 
-Belgeler konu ve kullanım amacına göre aşağıdaki klasörlerde tutulur:
+Bu klasör kurulum komutlarının yerine geçmez; güncel çalıştırma akışı kökteki
+[README.md](../README.md) ve [scripts/README.md](../scripts/README.md)
+dosyalarındadır.
+
+## Klasörler
 
 ```text
 docs/
-├── daily/       # Günlük geliştirme kayıtları ve değişiklik özetleri
-├── plans/       # Tarihli yapılacaklar ve veri/deney planları
-└── reference/   # Teknik raporlar, proje planları ve resmi referanslar
+├── daily/       # Tarihli geliştirme kayıtları
+├── plans/       # Yol haritası ve çalışma planları
+└── reference/   # Teknik raporlar ve resmi referanslar
 ```
 
-## Günlük geliştirme kayıtları
+- [Günlük kayıtları](daily/)
+- [Planlar](plans/)
+- [Referans belgeleri](reference/)
 
-Gün içinde yapılan teknik değişiklikler, doğrulamalar ve bilinen sınırlamalar
-[`daily/`](daily/) klasöründe tarihli Markdown dosyalarıyla tutulur.
-
-- [`2026-11-03 geliştirme günlüğü`](daily/2026-11-03-gelismeler.md)
-
-## Referans belgeleri
-
-Teknik raporlar, proje planları ve öncelikli alan belgeleri
-[`reference/`](reference/) klasöründedir.
-
-## Planlar
-
-Veri tamamlama ve sonraki deney aşamaları
-[`plans/`](plans/) klasöründeki tarihli belgelerde tutulur.
-
-- [`2026-11-03 veri tamamlama planı`](plans/2026-11-03-veri-tamamlama.md)
-- [`Proje roadmap'i`](plans/ROADMAP.md)
-
-Çalıştırma ve kurulum talimatları için kökteki
-[`README.md`](../README.md) kullanılmalıdır.
+Günlük ve plan dosyaları tarihsel bağlam taşır. Güncel komut veya dosya
+konumu ile çelişmeleri halinde kök README ve script kataloğu esas alınır.
