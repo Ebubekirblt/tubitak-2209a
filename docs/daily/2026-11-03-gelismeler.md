@@ -94,7 +94,7 @@ dataset/turkish_manifest.jsonl
 
 ## Manifest üretimi
 
-[`scripts/create_turkish_manifest.py`](../scripts/create_turkish_manifest.py)
+[`scripts/create_turkish_manifest.py`](../../scripts/create_turkish_manifest.py)
 şunları yapar:
 
 - Dataset klasörlerindeki WAV dosyalarını tarar.
@@ -121,7 +121,7 @@ için kullanılır.
 
 ### G.711 dar bant simülasyonu
 
-[`scripts/create_phone_channel_manifest.py`](../scripts/create_phone_channel_manifest.py)
+[`scripts/create_phone_channel_manifest.py`](../../scripts/create_phone_channel_manifest.py)
 eklendi. Script:
 
 - Sesi mono yapar.
@@ -143,7 +143,7 @@ dataset/phone_channel_8k/
 
 ### Gerçek codec dönüşümü
 
-[`scripts/create_real_codec_manifest.py`](../scripts/create_real_codec_manifest.py)
+[`scripts/create_real_codec_manifest.py`](../../scripts/create_real_codec_manifest.py)
 eklendi. FFmpeg encoder'ı mevcutsa GSM, AMR-NB veya Opus round-trip deneyi
 üretebilir.
 
@@ -163,7 +163,7 @@ G.711 simülasyonuna dönmez.
 
 ## Otomasyon
 
-[`scripts/run_turkish_pipeline.py`](../scripts/run_turkish_pipeline.py) ile
+[`scripts/run_turkish_pipeline.py`](../../scripts/run_turkish_pipeline.py) ile
 manifest, doğrulama, telefon kanalı dönüşümü ve eğitim tek komutta
 çalıştırılabilir:
 
@@ -195,7 +195,7 @@ experiments/turkish/run_summary.json
 
 ## XLS-R akışı
 
-[`scripts/train_xlsr_turkish.py`](../scripts/train_xlsr_turkish.py) ile
+[`scripts/train_xlsr_turkish.py`](../../scripts/train_xlsr_turkish.py) ile
 `facebook/wav2vec2-xls-r-300m` modeli Türkçe manifest üzerinden sınıflandırıcı
 olarak ince ayarlanabilir:
 
@@ -304,4 +304,3 @@ Gün içinde oluşturulan ilgili commit'ler:
 09718e2 docs: add project reference materials
 f1665f0 chore: exclude local dataset artifacts
 ```
-
