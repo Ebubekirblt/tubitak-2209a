@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+.env
+.python-version
+*.egg-info/
+
+# Tooling and local caches
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/settings.json
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+*.log
+
+# Training outputs and checkpoints
+exp_result/
+experiments/
+!experiments/
+!experiments/README.md
+**/exp_result/
+**/checkpoints/
+**/runs/
+**/tensorboard/
+**/wandb/
+*.pth
+*.pt
+*.ckpt
+
+# Keep documentation in otherwise ignored output directories
+!**/README.md
+!**/README.tr.md
+
+# Downloaded datasets and generated audio
+dataset/**/data/
+dataset/**/audio/
+dataset/phone_channel_8k/
+dataset/commonvoice_17_tr_fixed/
+dataset/real_codec_*/
+dataset/**/train/
+dataset/**/test/
+dataset/**/.cache/
+dataset/**/*.wav
+dataset/**/*.mp3
+dataset/**/*.flac
+dataset/**/*.parquet
+dataset/**/*.tar.gz
+dataset/**/*.zip
+dataset/*manifest*.jsonl
+
+# Keep documentation in generated dataset directories
+!dataset/**/data/
+!dataset/**/data/README.md
+
+# ASVspoof files downloaded by aasist-source/download_dataset.py
+aasist-source/LA/
+aasist-source/LA.zip
+
+# Evaluation outputs
+*_scores*.txt
+*_t-DCF*.txt

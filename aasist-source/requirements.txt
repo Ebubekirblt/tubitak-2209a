@@ -1,0 +1,8 @@
+torch>=1.6.0
+torchcontrib
+numpy
+scipy
+soundfile
+transformers
+datasets
+huggingface_hub
