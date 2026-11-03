@@ -4,6 +4,7 @@
 import argparse
 import json
 import tarfile
+from collections import defaultdict
 from pathlib import Path
 
 
@@ -74,6 +75,11 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=Path("dataset/turkish_manifest.jsonl"))
     parser.add_argument("--extract-archives", action="store_true")
     parser.add_argument(
+        "--speaker-disjoint",
+        action="store_true",
+        help="Create deterministic group-disjoint splits; requires speaker_id metadata",
+    )
+    parser.add_argument(
         "--holdout-generator",
         help="Move matching generator records to test for unseen-generator evaluation",
     )
@@ -81,6 +87,18 @@ def main() -> int:
 
     if args.extract_archives:
         extract_archives(args.root)
+    metadata_by_path = {}
+    source_manifests = (
+        args.root / "commonvoice_tr_manifest.jsonl",
+        args.root / "commonvoice_17_tr_fixed" / "commonvoice_tr_manifest.jsonl",
+    )
+    for metadata_path in source_manifests:
+        if not metadata_path.is_file():
+            continue
+        for line in metadata_path.read_text(encoding="utf-8").splitlines():
+            if line:
+                item = json.loads(line)
+                metadata_by_path[str(Path(item["path"]).resolve())] = item
     records = []
     seen_paths = set()
     for audio in sorted(args.root.rglob("*.wav")):
@@ -91,16 +109,50 @@ def main() -> int:
         if resolved_path in seen_paths:
             raise SystemExit(f"Duplicate audio path: {resolved_path}")
         seen_paths.add(resolved_path)
-        records.append({
+        record = {
             "path": resolved_path,
             "label": label,
             "split": split_for(audio),
             "source": source,
             "generator": generator_for(audio, args.root),
-        })
+        }
+        source_metadata = metadata_by_path.get(resolved_path, {})
+        if source_metadata.get("speaker_id"):
+            record["speaker_id"] = source_metadata["speaker_id"]
+        records.append(record)
     if not records:
         raise SystemExit("No WAV files found. Download/extract Turkish datasets first.")
+    if args.speaker_disjoint:
+        missing_speakers = [
+            record["path"] for record in records if not record.get("speaker_id")
+        ]
+        if missing_speakers:
+            raise SystemExit(
+                "--speaker-disjoint requires speaker_id metadata; "
+                f"{len(missing_speakers)} records are missing it"
+            )
+        groups = defaultdict(list)
+        for record in records:
+            groups[(record["label"], record["speaker_id"])].append(record)
+        for label in (0, 1):
+            label_groups = sorted(
+                (items for (group_label, _), items in groups.items() if group_label == label),
+                key=lambda items: items[0]["speaker_id"],
+            )
+            total = sum(len(items) for items in label_groups)
+            boundaries = (total * 0.8, total * 0.9)
+            seen = 0
+            for items in label_groups:
+                midpoint = seen + len(items) / 2
+                split = "train" if midpoint <= boundaries[0] else (
+                    "dev" if midpoint <= boundaries[1] else "test"
+                )
+                for record in items:
+                    record["split"] = split
+                seen += len(items)
     for label in (0, 1):
+        if args.speaker_disjoint:
+            continue
         pending = sorted(
             (record for record in records if record["label"] == label and record["split"] is None),
             key=lambda record: record["path"],

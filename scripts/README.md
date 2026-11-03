@@ -13,6 +13,7 @@ ve deney çıktısını Git’e eklemez.
 | [`2209A_AASIST_kurulum_Python314.sh`](2209A_AASIST_kurulum_Python314.sh) | macOS | Ayrıntılı Python, bağımlılık ve ağırlık kurulumu |
 | [`TUBITAK_2209A_Windows_Tek_Script-2.ps1`](TUBITAK_2209A_Windows_Tek_Script-2.ps1) | Windows | Ayrıntılı kurulum ve veri seçenekleri |
 | [`check_repository.py`](check_repository.py) | Tüm platformlar | Repo ve manifest kalite kontrolü |
+| [`validate_manifest.py`](validate_manifest.py) | Tüm platformlar | Split, speaker leakage ve sınıf dengesi kontrolü |
 
 ```bash
 python3 scripts/check_repository.py
@@ -32,6 +33,7 @@ python3 scripts/check_repository.py
 
 ```bash
 python scripts/create_turkish_manifest.py --root dataset --extract-archives
+python scripts/validate_manifest.py dataset/turkish_manifest.jsonl
 python scripts/create_phone_channel_manifest.py
 ```
 
@@ -42,6 +44,19 @@ python scripts/create_phone_channel_manifest.py
 --output PATH
 --extract-archives
 --holdout-generator NAME
+--speaker-disjoint
+```
+
+Speaker-disjoint deney için kaynak metadata ile yeniden manifest üretin:
+
+```bash
+python scripts/create_turkish_manifest.py \
+  --speaker-disjoint \
+  --output dataset/turkish_speaker_disjoint_manifest.jsonl
+python scripts/validate_manifest.py \
+  dataset/turkish_speaker_disjoint_manifest.jsonl \
+  --require-speaker-id \
+  --speaker-disjoint
 ```
 
 Common Voice ve MLAAD örnekleri:

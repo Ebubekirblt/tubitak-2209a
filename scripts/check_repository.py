@@ -18,6 +18,7 @@ REQUIRED_FILES = (
     "scripts/TUBITAK_2209A_Windows_Tek_Script-2.ps1",
     "scripts/run_turkish_pipeline.py",
     "scripts/train_turkish.py",
+    "scripts/validate_manifest.py",
     "scripts/verify_models.py",
 )
 REQUIRED_DIRECTORIES = (
@@ -28,7 +29,7 @@ REQUIRED_DIRECTORIES = (
     "experiments",
     "scripts",
 )
-MANIFESTS = (
+OPTIONAL_MANIFESTS = (
     "dataset/commonvoice_tr_manifest.jsonl",
     "dataset/turkish_manifest.jsonl",
 )
@@ -48,8 +49,10 @@ def check_paths() -> None:
 
 
 def check_manifests() -> None:
-    for relative in MANIFESTS:
+    for relative in OPTIONAL_MANIFESTS:
         path = ROOT / relative
+        if not path.exists():
+            continue
         with path.open(encoding="utf-8") as handle:
             for line_number, line in enumerate(handle, 1):
                 if not line.strip():

@@ -36,9 +36,13 @@ def main() -> int:
             if samples.ndim == 2:
                 samples = np.mean(samples, axis=1)
             sf.write(target, samples, rate, subtype="PCM_16")
-            rows.append({"path": str(target.resolve()), "split": split, "label": 1,
-                         "source": "commonvoice_17_tr_fixed",
-                         "generator": "commonvoice_17_tr_fixed"})
+            speaker_id = item.get("client_id")
+            row = {"path": str(target.resolve()), "split": split, "label": 1,
+                   "source": "commonvoice_17_tr_fixed",
+                   "generator": "commonvoice_17_tr_fixed"}
+            if speaker_id:
+                row["speaker_id"] = str(speaker_id)
+            rows.append(row)
     manifest = args.output.parent / "commonvoice_tr_manifest.jsonl"
     manifest.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
     print(f"Exported {len(rows)} Common Voice records to {manifest}")

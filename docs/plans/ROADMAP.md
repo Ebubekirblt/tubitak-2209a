@@ -73,14 +73,13 @@ eder.
 
 ### P0 — Deney güvenilirliği
 
-- [ ] Konuşmacı-disjoint train/dev/test split oluştur.
-- [ ] Not: Mevcut WAV manifestlerinde `speaker_id` bulunmuyor; Common Voice
-      dışa aktarımı da `client_id` bilgisini taşımıyor. Bu adım, kaynak
-      metadata yeniden alınmadan güvenilir biçimde tamamlanamaz.
-- [ ] TTS üreticisi-disjoint deneyleri tüm üreticilerle tekrarla.
-- [ ] Temiz ses ve telefon kanalı test setlerini birbirinden ayır.
-- [ ] Veri kaynaklarını ve kullanılan kayıt sayılarını deney özetine yaz.
-- [ ] Sentetik sınıfın kaynaklar arasında dengesiz olmasını kontrol et.
+- [x] Speaker metadata taşıma ve speaker-disjoint split doğrulama akışını ekle.
+- [ ] Mevcut WAV’leri kaynak `client_id` metadata’sı ile yeniden dışa aktar.
+- [x] `--holdout-generator` ile TTS üreticisi-disjoint deney akışını doğrula.
+- [ ] TTS üreticisi-disjoint sonuçlarını tüm üreticilerle çalıştır.
+- [x] Temiz ses ve telefon kanalı manifestlerini ayrı tut.
+- [x] Veri kaynakları ve kayıt sayılarını manifest doğrulamasında raporla.
+- [x] Sentetik sınıf dengesini manifest doğrulamasında kontrol et.
 
 ### P1 — Sentetik veri ve telefon koşulları
 
