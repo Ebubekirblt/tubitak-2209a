@@ -15,6 +15,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=Path("dataset/commonvoice_17_tr_fixed"))
     parser.add_argument("--limit", type=int, default=1000)
+    parser.add_argument("--all", action="store_true", help="Export every record in each selected split")
     parser.add_argument("--splits", nargs="+", default=["train", "validation", "test"])
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -23,7 +24,7 @@ def main() -> int:
         dataset = load_dataset("ysdede/commonvoice_17_tr_fixed", split=split, streaming=True)
         dataset = dataset.cast_column("audio", Audio(decode=False))
         for index, item in enumerate(dataset):
-            if index >= args.limit:
+            if not args.all and index >= args.limit:
                 break
             target = args.output / split / f"{index:08d}.wav"
             target.parent.mkdir(parents=True, exist_ok=True)

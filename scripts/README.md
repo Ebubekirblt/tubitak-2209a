@@ -128,6 +128,13 @@ XLS-R ilk çalıştırmada `facebook/wav2vec2-xls-r-300m` modelini indirir.
 Apple Silicon MPS kontrolü için `python scripts/verify_models.py --device mps`
 çalıştırılabilir.
 
+Common Voice TR'nin tamamını indirmek için `--all` kullanılır. Bu işlem
+yaklaşık 91 bin kaydı WAV'a çevirebilir ve uzun sürebilir:
+
+```bash
+python scripts/download_commonvoice_tr.py --all
+```
+
 Önce WAV arşivlerini çıkarıp ortak manifesti oluşturun:
 
 ```bash
