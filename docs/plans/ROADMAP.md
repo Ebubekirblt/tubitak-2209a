@@ -11,7 +11,7 @@ eder.
 |---|---|
 | GitHub repo yapısı | ✅ Tamamlandı |
 | Türkçe veri hazırlama | ✅ İlk tam sürüm hazır |
-| Common Voice TR | ✅ 44.790 WAV dışa aktarıldı |
+| Common Voice TR | 🟡 44.790 WAV mevcut; speaker metadata’sı için resmi arşiv bekleniyor |
 | MLAAD Türkçe | ✅ 7.000 WAV indirildi |
 | FLEURS TR ve girenit | ✅ Yerel veri mevcut |
 | Türkçe manifest | ✅ 56.689 kayıtla üretildi |
@@ -50,6 +50,10 @@ eder.
 - [x] MLAAD TTS üreticisi bilgisi manifestte korunuyor.
 - [x] Her split'te iki sınıfın bulunması doğrulanıyor.
 - [x] Güvenli arşiv açma ve duplicate yol kontrolleri eklendi.
+- [x] Common Voice resmi arşiv aktarımında `client_id` bilgisini `speaker_id`
+      olarak koruyan exporter eklendi.
+- [x] Speaker metadata’sı zorunlu olduğunda metadata içermeyen kaynakların
+      sessizce kullanılmasını engelleyen doğrulama eklendi.
 
 ### Model ve eğitim
 
@@ -93,6 +97,69 @@ eder.
 - [x] Veri kaynakları ve kayıt sayılarını manifest doğrulamasında raporla.
 - [x] Sentetik sınıf dengesini manifest doğrulamasında kontrol et; yüksek oranı
       sessizce kabul etmek yerine doğrulama hatası olarak raporla.
+
+#### Common Voice speaker metadata raporu
+
+Speaker-disjoint değerlendirme için her ses kaydının güvenilir bir konuşmacı
+kimliğiyle eşleştirilmesi gerekiyor. Mevcut
+`ysdede/commonvoice_17_tr_fixed` kopyası yalnızca ses ve içerik alanlarını
+sağlıyor; `client_id` veya eşdeğer bir konuşmacı alanı içermiyor. Bu nedenle
+mevcut WAV dosyalarından konuşmacı kimliğini sonradan güvenilir biçimde
+üretmek mümkün değil. Yapay veya dosya adına dayalı speaker ID üretmek,
+ölçümün leakage-free olduğu iddiasını geçersiz kılabileceği için özellikle
+kullanılmıyor.
+
+Bu kısıtı çözmek için `scripts/download_commonvoice_tr.py` içine resmi Common
+Voice arşivini doğrudan okuyabilen bir aktarım yolu eklendi. Beklenen arşiv
+yapısı şöyledir:
+
+```text
+cv-corpus-tr/
+├── clips/
+├── train.tsv
+├── dev.tsv
+└── test.tsv
+```
+
+Exporter’ın davranışı:
+
+- `train.tsv`, `dev.tsv` ve `test.tsv` içindeki `client_id` alanını
+  `speaker_id` olarak manifest’e taşır.
+- Ses dosyalarını `clips/` altından bulur ve WAV çıktısı üretir.
+- MP3 ve desteklenen diğer girişleri FFmpeg üzerinden dönüştürür.
+- Orijinal split bilgisini korur.
+- `--require-speaker-id` kullanıldığında metadata eksikliğini açık hata olarak
+  bildirir; kayıtları sessizce dışlamaz veya sahte kimlik oluşturmaz.
+- Üretilen veri, `create_turkish_manifest.py` içindeki
+  `--speaker-disjoint` akışına verilebilir.
+
+Resmi arşiv indirildikten sonra önerilen tam akış:
+
+```bash
+python scripts/download_commonvoice_tr.py \
+  --source-dir /path/to/cv-corpus-tr \
+  --output dataset/commonvoice_17_tr_fixed \
+  --all \
+  --require-speaker-id
+
+python scripts/create_turkish_manifest.py \
+  --speaker-disjoint \
+  --output dataset/turkish_speaker_disjoint_manifest.jsonl
+
+python scripts/validate_manifest.py \
+  dataset/turkish_speaker_disjoint_manifest.jsonl \
+  --require-speaker-id \
+  --speaker-disjoint
+```
+
+Aktarım aracı yerel bir Common Voice arşiv simülasyonu ile doğrulandı.
+Metadata’sız mevcut HF kaynağıyla `--require-speaker-id` çalıştırıldığında
+işlem beklenen şekilde açık hata veriyor. FLEURS, MLAAD ve Girenit kaynakları
+üzerinden üretilen 11.899 kayıtlık alt kümede ise splitler arasında speaker
+çakışması bulunmadığı doğrulandı. Tam Common Voice katkısı, Mozilla Data
+Collective erişimi olan resmi arşivin indirilmesinden sonra tamamlanacak;
+bu dış veri erişimi gereksinimi kod veya mevcut WAV’lar üzerinden çözülebilecek
+bir eksiklik değildir.
 
 ### P1 — Sentetik veri ve telefon koşulları
 
