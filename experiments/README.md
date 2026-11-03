@@ -17,6 +17,9 @@ experiments/
 ```
 
 `train_turkish.py` model klasörüne checkpoint ve `metrics.json` yazar.
+`metrics.json` test loss/accuracy yanında EER, ROC-AUC, F1, precision, recall,
+balanced accuracy ve confusion matrix içerir. Test değerlendirmesi en iyi dev
+checkpoint ile yapılır.
 `run_turkish_pipeline.py` çalıştırılan manifest, model ve seçenekleri
 `run_summary.json` içinde kaydeder.
 

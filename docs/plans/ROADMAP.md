@@ -100,10 +100,9 @@ eder.
 
 ### P1 — Değerlendirme ve raporlama
 
-- [ ] EER hesapla.
-- [ ] ROC-AUC hesapla.
-- [ ] F1, precision, recall ve balanced accuracy hesapla.
-- [ ] Confusion matrix üret.
+- [x] EER hesaplama modülünü ve eğitim çıktısını ekle.
+- [x] ROC-AUC, F1, precision, recall ve balanced accuracy hesaplama ekle.
+- [x] Confusion matrix üretimini `metrics.json` içine ekle.
 - [ ] Model, üretici ve codec bazlı sonuç tabloları oluştur.
 - [ ] Sonuçları `metrics.json` ve özet CSV/JSON dosyalarına yaz.
 - [ ] Deneylerde Git commit hash ve veri manifest hash bilgisini sakla.
@@ -152,4 +151,4 @@ Her önemli tamamlanan işten sonra:
 3. Test veya doğrulama sonucu ilgili günlük dosyasına eklenir.
 4. Değişiklik kendi konusu ile ilişkili ayrı commit olarak kaydedilir.
 
-Son güncelleme: **2026-11-03**
+Son güncelleme: **2026-11-04**

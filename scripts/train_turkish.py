@@ -18,6 +18,9 @@ from torch.utils.data import DataLoader, Dataset
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "aasist-source"
 sys.path.insert(0, str(SOURCE))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from metrics import classification_metrics
 
 
 def pad_random(audio: np.ndarray, length: int) -> np.ndarray:
@@ -90,6 +93,25 @@ def run_epoch(model, loader, criterion, device, optimizer=None) -> tuple[float, 
         correct += (logits.argmax(dim=1) == labels).sum().item()
         total += labels.size(0)
     return total_loss / total, correct / total
+
+
+def evaluate(model, loader, criterion, device) -> tuple[float, float, dict]:
+    model.eval()
+    total_loss = correct = total = 0
+    labels: list[int] = []
+    scores: list[float] = []
+    with torch.inference_mode():
+        for audio, batch_labels in loader:
+            audio, batch_labels = audio.to(device), batch_labels.to(device)
+            _, logits = model(audio)
+            loss = criterion(logits, batch_labels)
+            probabilities = torch.softmax(logits, dim=1)[:, 1]
+            total_loss += loss.item() * batch_labels.size(0)
+            correct += (logits.argmax(dim=1) == batch_labels).sum().item()
+            total += batch_labels.size(0)
+            labels.extend(batch_labels.cpu().tolist())
+            scores.extend(probabilities.cpu().tolist())
+    return total_loss / total, correct / total, classification_metrics(labels, scores)
 
 
 def main() -> int:
@@ -167,8 +189,18 @@ def main() -> int:
         if dev_accuracy >= best_accuracy:
             best_accuracy = dev_accuracy
             torch.save(model.state_dict(), args.output / "best.pth")
-    test_loss, test_accuracy = run_epoch(model, loaders["test"], criterion, device)
+    best_weights = args.output / "best.pth"
+    model.load_state_dict(torch.load(best_weights, map_location=device, weights_only=True))
+    test_loss, test_accuracy, test_metrics = evaluate(
+        model, loaders["test"], criterion, device
+    )
     print(f"test_loss={test_loss:.4f} test_acc={test_accuracy:.4f}")
+    print(
+        "test_metrics="
+        f"eer={test_metrics['eer']:.4f} "
+        f"roc_auc={test_metrics['roc_auc']:.4f} "
+        f"f1={test_metrics['f1']:.4f}"
+    )
     (args.output / "metrics.json").write_text(json.dumps({
         "config": str(args.config.resolve()),
         "manifest": str(args.manifest.resolve()),
@@ -178,6 +210,7 @@ def main() -> int:
         "best_dev_accuracy": best_accuracy,
         "test_loss": test_loss,
         "test_accuracy": test_accuracy,
+        "test_metrics": test_metrics,
         "history": history,
     }, indent=2) + "\n", encoding="utf-8")
     return 0

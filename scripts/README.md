@@ -63,6 +63,7 @@ gerekiyorsa token’ı script içine yazmadan `hf auth login` kullanın.
 |---|---|
 | [`run_turkish_pipeline.py`](run_turkish_pipeline.py) | Manifest, doğrulama ve eğitim akışını birleştirir |
 | [`train_turkish.py`](train_turkish.py) | Tek bir Türkçe modelini eğitir |
+| [`metrics.py`](metrics.py) | EER, ROC-AUC, F1 ve sınıflandırma metriklerini hesaplar |
 | [`train_xlsr_turkish.py`](train_xlsr_turkish.py) | XLS-R ince ayarı yapar |
 | [`verify_models.py`](verify_models.py) | Yerel model ileri geçişini doğrular |
 
@@ -101,7 +102,9 @@ python scripts/train_turkish.py \
 ```
 
 `--weights` başlangıç ağırlığı, `--output` deney klasörü, `--seed` deney
-tekrarlanabilirliği için kullanılır. Varsayılan çıktılar
+tekrarlanabilirliği için kullanılır. Test değerlendirmesi en iyi dev checkpoint
+üzerinde yapılır. `metrics.json` içinde EER, ROC-AUC, F1, precision, recall,
+balanced accuracy ve confusion matrix kaydedilir. Varsayılan çıktılar
 `experiments/turkish/` altındadır.
 
 Model doğrulama:
