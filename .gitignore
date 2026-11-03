@@ -41,6 +41,12 @@ experiments/
 !**/README.tr.md
 
 # Downloaded datasets and generated audio
+dataset/**
+!dataset/
+!dataset/**/
+!dataset/**/README.md
+!dataset/**/README.tr.md
+!dataset/readme.md
 dataset/**/data/
 dataset/**/audio/
 dataset/phone_channel_8k/
