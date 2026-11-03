@@ -74,12 +74,17 @@ eder.
 ### P0 — Deney güvenilirliği
 
 - [x] Speaker metadata taşıma ve speaker-disjoint split doğrulama akışını ekle.
-- [ ] Mevcut WAV’leri kaynak `client_id` metadata’sı ile yeniden dışa aktar.
+- [ ] Mevcut WAV’leri `client_id` metadata’sı sağlayan Common Voice kaynağından
+      yeniden dışa aktar. Mevcut `ysdede/commonvoice_17_tr_fixed` kaynağında
+      `client_id` alanı bulunmadığı için speaker-disjoint split henüz üretilemez.
 - [x] `--holdout-generator` ile TTS üreticisi-disjoint deney akışını doğrula.
-- [ ] TTS üreticisi-disjoint sonuçlarını tüm üreticilerle çalıştır.
+- [x] Yedi TTS üreticisi için holdout manifestlerini üret ve doğrula.
+- [ ] Holdout eğitimlerini tüm üreticilerle çalıştır; yüksek dev sınıf oranı
+      görülen üreticilerde sınıf dengeleme/örnekleme planını uygula.
 - [x] Temiz ses ve telefon kanalı manifestlerini ayrı tut.
 - [x] Veri kaynakları ve kayıt sayılarını manifest doğrulamasında raporla.
-- [x] Sentetik sınıf dengesini manifest doğrulamasında kontrol et.
+- [x] Sentetik sınıf dengesini manifest doğrulamasında kontrol et; yüksek oranı
+      sessizce kabul etmek yerine doğrulama hatası olarak raporla.
 
 ### P1 — Sentetik veri ve telefon koşulları
 
