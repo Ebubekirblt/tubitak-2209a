@@ -74,6 +74,9 @@ eder.
 ### P0 — Deney güvenilirliği
 
 - [ ] Konuşmacı-disjoint train/dev/test split oluştur.
+- [ ] Not: Mevcut WAV manifestlerinde `speaker_id` bulunmuyor; Common Voice
+      dışa aktarımı da `client_id` bilgisini taşımıyor. Bu adım, kaynak
+      metadata yeniden alınmadan güvenilir biçimde tamamlanamaz.
 - [ ] TTS üreticisi-disjoint deneyleri tüm üreticilerle tekrarla.
 - [ ] Temiz ses ve telefon kanalı test setlerini birbirinden ayır.
 - [ ] Veri kaynaklarını ve kullanılan kayıt sayılarını deney özetine yaz.
