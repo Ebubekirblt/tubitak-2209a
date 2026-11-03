@@ -37,6 +37,7 @@ Türkçe ön-eğitimli değildir.
 |---|---|---|
 | [`2209A_AASIST_kurulum_Python314.sh`](2209A_AASIST_kurulum_Python314.sh) | macOS Apple Silicon | Python 3.14 ortamı, bağımlılıklar ve AASIST/AASIST-L ağırlıkları |
 | [`TUBITAK_2209A_Windows_Tek_Script-2.ps1`](TUBITAK_2209A_Windows_Tek_Script-2.ps1) | Windows 10/11 x64 | Gerekirse `Desktop/Tubitak` klasörünü oluşturur; kurulum, veri seti ve iki AASIST ağırlığı |
+| [`check_repository.py`](check_repository.py) | Python | Repo yapısı, manifest JSONL ve Python sözdizimi kontrolü |
 | [`mlaad_tr_dilimli_indir.py`](mlaad_tr_dilimli_indir.py) | Python | MLAAD Türkçe klasörlerinden sınırlı veya tam indirme |
 | [`verify_models.py`](verify_models.py) | Python | AASIST, RawNet2 ve RawGAT-ST mimarilerinin yerel ileri geçiş kontrolü |
 | [`train_xlsr_turkish.py`](train_xlsr_turkish.py) | Python | wav2vec2-XLS-R Türkçe ince ayarı |
@@ -44,6 +45,14 @@ Türkçe ön-eğitimli değildir.
 | [`create_real_codec_manifest.py`](create_real_codec_manifest.py) | Python + FFmpeg | GSM/Opus gerçek codec round-trip manifesti |
 
 ## macOS
+
+Depo kökünden doğrudan giriş betiği:
+
+```bash
+bash setup-macos.sh
+```
+
+Bu betik aşağıdaki ayrıntılı kurulumu depo köküne bağlar:
 
 ```bash
 bash scripts/2209A_AASIST_kurulum_Python314.sh
@@ -55,6 +64,22 @@ klasörü yoksa klonlar. Ağırlık `aasist-source/models/weights/AASIST.pth`
 konumuna indirilir.
 
 ## Windows
+
+Depo kökünden doğrudan giriş betiği:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\setup-windows.ps1
+```
+
+Kurulum yalnızca ortam ve model kontrolüyle başlatılmak istenirse:
+
+```powershell
+.\setup-windows.ps1 -Mode Setup
+```
+
+Bu betik ileri seçenekleri mevcut ayrıntılı betiğe aktarır. Ayrıntılı betiği
+doğrudan çalıştırmak için:
 
 PowerShell'de:
 

@@ -16,8 +16,10 @@ Deneylerde yalnızca Türkçe veri kaynakları kullanılacaktır.
 │   └── models/          # AASIST, RawNet2 ve RawGAT-ST mimarileri
 ├── dataset/             # Yerel veri setleri (Git'e eklenmez)
 ├── docs/                # Proje ve teknik belgeler
-├── scripts/             # Kurulum ve veri indirme yardımcıları
-└── experiments/         # Yerel deney çıktıları (Git'e eklenmez)
+├── experiments/         # Yerel deney çıktıları (Git'e eklenmez)
+├── scripts/             # Kurulum, veri, eğitim ve doğrulama yardımcıları
+├── setup-macos.sh       # macOS tek giriş noktası
+└── setup-windows.ps1    # Windows tek giriş noktası
 ```
 
 Büyük veri setleri, önceden eğitilmiş ağırlıklar ve sanal ortam dosyaları
@@ -39,6 +41,41 @@ eğitim gerekir.
 Bu bölüm Türkçe deneyler için önerilen akıştır. Komutları depo kökünde
 çalıştırın. Linux/macOS için `python3`, Windows için `python` veya sanal
 ortamın Python yürütücüsü kullanılabilir.
+
+### Doğrudan tek komut
+
+Depo kökünden platformunuza uygun giriş betiğini çalıştırın. Betikler eksik
+araçları, Python 3.14 sanal ortamını, Python bağımlılıklarını, AASIST
+kaynak kodunu, model ağırlıklarını ve CPU/GPU doğrulamasını kontrol edip
+tamamlar. Var olan dosyalar silinmez.
+
+macOS:
+
+```bash
+bash setup-macos.sh
+```
+
+Windows PowerShell:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\setup-windows.ps1
+```
+
+Windows giriş betiği varsayılan olarak veri seti indirmelerini de başlatır.
+İlk kurulumda yalnızca ortam ve model kontrolü için
+`.\setup-windows.ps1 -Mode Setup` kullanılabilir. MLAAD'ın tamamı büyük
+olduğundan varsayılan
+örneklem korunur; tamamı için `-Mode MLAAD -MlaadFull` eklenir.
+
+Repo yapısı, manifest biçimi ve Python sözdizimi için:
+
+```bash
+make check
+```
+
+Komutların tamamı ve kullanım amaçları
+[scripts/README.md](scripts/README.md) içindeki katalogda tutulur.
 
 ### 1. Ortam kurulumu
 
