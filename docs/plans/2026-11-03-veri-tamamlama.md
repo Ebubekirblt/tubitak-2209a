@@ -23,13 +23,13 @@ Kontrol edilen yaklaşık boyutlar:
 | Kaynak | Yerel durum |
 |---|---:|
 | FLEURS TR | yaklaşık 2.6 GB |
-| MLAAD Türkçe | yaklaşık 2.4 GB, tam indirme henüz doğrulanmadı |
+| MLAAD Türkçe | 7.000 WAV + 7 `meta.csv`, yaklaşık 2.4 GB |
 | girenit Türkçe TTS | yaklaşık 452 MB |
 | Synthetic Turkish TTS parquet | yaklaşık 3.1 GB |
 | TurkicASR yardımcı modeli | yaklaşık 609 MB |
-| Common Voice TR | 300 WAV; tam dışa aktarma başlatıldı |
+| Common Voice TR | 44.790 WAV olarak dışa aktarıldı |
 
-Common Voice ana manifesti şu anda yerel mevcut kayıtlarla yeniden üretilebilir:
+Common Voice ana manifesti tam yerel kayıtlarla yeniden üretildi:
 
 ```bash
 python scripts/create_turkish_manifest.py \
@@ -80,18 +80,16 @@ python scripts/create_turkish_manifest.py \
 
 ## Bundan sonra yapılacaklar
 
-1. Common Voice TR'nin tamamının dışa aktarılmasını beklemek.
-2. MLAAD Türkçe klasörlerinin tamamının indirilmesini doğrulamak.
-3. Synthetic Turkish TTS parquet dosyalarını WAV veya doğrudan dataset
-   okuyucusuyla manifest akışına dahil etmek.
-4. Konuşmacı-disjoint train/dev/test bölünmesi oluşturmak.
-5. TTS üreticisi-disjoint testleri tekrarlamak.
-6. G.711, Opus, GSM-FR ve AMR-NB telefon koşullarını karşılaştırmak.
-7. AASIST, RawNet2, RawGAT-ST ve XLS-R modellerini aynı test setlerinde
-   eğitip karşılaştırmak.
-8. EER, ROC-AUC, F1, balanced accuracy ve confusion matrix raporlamak.
-9. En iyi modeli ses dosyası alan bir inference CLI/API ile paketlemek.
-10. Lisans, veri kaynağı ve deney konfigürasyonlarını yayınlanabilir rapora
+1. Synthetic Turkish TTS parquet dosyalarını WAV veya doğrudan dataset
+    okuyucusuyla manifest akışına dahil etmek.
+2. Konuşmacı-disjoint train/dev/test bölünmesi oluşturmak.
+3. TTS üreticisi-disjoint testleri tekrarlamak.
+4. G.711, Opus, GSM-FR ve AMR-NB telefon koşullarını karşılaştırmak.
+5. AASIST, RawNet2, RawGAT-ST ve XLS-R modellerini aynı test setlerinde
+    eğitip karşılaştırmak.
+6. EER, ROC-AUC, F1, balanced accuracy ve confusion matrix raporlamak.
+7. En iyi modeli ses dosyası alan bir inference CLI/API ile paketlemek.
+8. Lisans, veri kaynağı ve deney konfigürasyonlarını yayınlanabilir rapora
     dönüştürmek.
 
 ## Kapsam notu

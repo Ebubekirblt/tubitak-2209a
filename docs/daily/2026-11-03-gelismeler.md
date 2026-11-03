@@ -76,15 +76,15 @@ python scripts/download_commonvoice_tr.py --limit 1000
 ```
 
 Bu script, sesleri WAV olarak dışa aktarır ve kaynak manifesti oluşturur.
-Gün içinde Common Voice TR’den 300 kayıt dışa aktarıldı ve ana manifest
-yeniden üretildi.
+Gün içinde Common Voice TR’nin 44.790 kaydı WAV olarak dışa aktarıldı ve ana
+manifest yeniden üretildi.
 
 Son doğrulanan ana manifest:
 
-- Toplam: 12.199 kayıt
-- Train: 9.498
-- Dev: 1.138
-- Test: 1.563
+- Toplam: 56.689 kayıt
+- Train: 35.899
+- Dev: 9.677
+- Test: 11.113
 
 Ana manifest yerel dosyadır ve Git'e eklenmez:
 
