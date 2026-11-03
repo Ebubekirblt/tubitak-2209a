@@ -86,6 +86,29 @@ python scripts/mlaad_tr_dilimli_indir.py --limit 20
 python scripts/mlaad_tr_dilimli_indir.py --all
 ```
 
+Speaker-disjoint Common Voice için Mozilla Data Collective’den indirilen resmi
+arşivi kullanın. Arşivde `clips/`, `train.tsv`, `dev.tsv` ve `test.tsv`
+bulunmalıdır:
+
+```bash
+python scripts/download_commonvoice_tr.py \
+  --source-dir /path/to/cv-corpus-tr \
+  --output dataset/commonvoice_17_tr_fixed \
+  --all \
+  --require-speaker-id
+python scripts/create_turkish_manifest.py \
+  --speaker-disjoint \
+  --output dataset/turkish_speaker_disjoint_manifest.jsonl
+python scripts/validate_manifest.py \
+  dataset/turkish_speaker_disjoint_manifest.jsonl \
+  --require-speaker-id \
+  --speaker-disjoint
+```
+
+Resmi arşiv `client_id` bilgisini korur ve exporter bunu `speaker_id` olarak
+manifest’e taşır. Mevcut `ysdede/commonvoice_17_tr_fixed` HF kopyası bu
+alanı içermediği için `--require-speaker-id` ile bilinçli olarak reddedilir.
+
 Tam MLAAD indirmesi büyük olabilir. Hugging Face kimlik doğrulaması
 gerekiyorsa token’ı script içine yazmadan `hf auth login` kullanın.
 `gdown`, yalnızca `-IncludeASR` ile istenen opsiyonel TurkicASR arşivi için

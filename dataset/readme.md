@@ -25,6 +25,17 @@ Manuel/ macOS akışında veri sağlayıcılarından dosyaları ilgili klasörle
 yerleştirin. Lisans, atıf, erişim ve yeniden dağıtım koşullarını ayrıca
 inceleyin.
 
+Speaker-disjoint deney için resmi Common Voice arşivini `clips/` ve TSV
+metadata dosyalarıyla dışa aktarın:
+
+```bash
+python scripts/download_commonvoice_tr.py \
+  --source-dir /path/to/cv-corpus-tr \
+  --output dataset/commonvoice_17_tr_fixed \
+  --all \
+  --require-speaker-id
+```
+
 ## Manifest üretimi
 
 ```bash

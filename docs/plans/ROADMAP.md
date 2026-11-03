@@ -79,9 +79,12 @@ eder.
       açıkça dışlama seçeneği ekle.
 - [x] Common Voice dışı 11.899 kayıtla leakage-free speaker-disjoint manifest
       üretimini ve doğrulamasını çalıştır.
-- [ ] Common Voice’i `client_id` metadata’sı sağlayan resmi Mozilla Data
-      Collective arşivinden yeniden dışa aktar ve tam speaker-disjoint split’i
-      üret. Mevcut `ysdede/commonvoice_17_tr_fixed` kopyası bu alanı içermiyor.
+- [x] `client_id` içeren resmi Common Voice arşivinden yeniden dışa aktarım
+      aracını ekle. Mozilla Data Collective arşivi indirildiğinde `--source-dir`
+      ve `--require-speaker-id` ile çalışır.
+- [ ] Resmi Common Voice arşivini Mozilla Data Collective’den indirip tam
+      speaker-disjoint split’i üret. Mevcut `ysdede/commonvoice_17_tr_fixed`
+      kopyası bu alanı içermiyor.
 - [x] `--holdout-generator` ile TTS üreticisi-disjoint deney akışını doğrula.
 - [x] Yedi TTS üreticisi için holdout manifestlerini üret ve doğrula.
 - [ ] Holdout eğitimlerini tüm üreticilerle çalıştır; yüksek dev sınıf oranı
