@@ -4,6 +4,7 @@
 import argparse
 import csv
 import json
+import math
 import tarfile
 from collections import defaultdict
 from pathlib import Path
@@ -97,6 +98,42 @@ def extract_archives(root: Path) -> None:
                     raise ValueError(f"Unsafe archive member: {member.name}")
             handle.extractall(target)
         marker.touch()
+
+
+MAX_CLASS_RATIO = 20.0
+
+
+def rebalance_holdout_dev(records: list[dict], holdout_generator: str) -> None:
+    """Keep enough non-held-out minority samples in dev for reliable metrics."""
+    dev_records = [record for record in records if record["split"] == "dev"]
+    counts = {
+        label: sum(record["label"] == label for record in dev_records)
+        for label in (0, 1)
+    }
+    majority_label = max(counts, key=counts.get)
+    minority_label = 1 - majority_label
+    required = math.ceil(counts[majority_label] / MAX_CLASS_RATIO)
+    deficit = required - counts[minority_label]
+    if deficit <= 0:
+        return
+
+    needle = holdout_generator.casefold()
+    candidates = sorted(
+        (
+            record for record in records
+            if record["split"] == "train"
+            and record["label"] == minority_label
+            and needle not in record["generator"].casefold()
+        ),
+        key=lambda record: record["path"],
+    )
+    if len(candidates) < deficit:
+        raise SystemExit(
+            "Cannot balance holdout dev split without moving held-out generator "
+            f"records: need {deficit}, found {len(candidates)}"
+        )
+    for record in candidates[:deficit]:
+        record["split"] = "dev"
 
 
 def main() -> int:
@@ -250,6 +287,8 @@ def main() -> int:
             if not candidates:
                 raise SystemExit(f"Cannot create {missing} split from the discovered audio")
             candidates[-1]["split"] = missing
+    if args.holdout_generator:
+        rebalance_holdout_dev(records, args.holdout_generator)
     for split in ("dev", "test"):
         labels = {record["label"] for record in records if record["split"] == split}
         for label in {0, 1} - labels:

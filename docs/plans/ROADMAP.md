@@ -91,8 +91,9 @@ eder.
       kopyası bu alanı içermiyor.
 - [x] `--holdout-generator` ile TTS üreticisi-disjoint deney akışını doğrula.
 - [x] Yedi TTS üreticisi için holdout manifestlerini üret ve doğrula.
-- [ ] Holdout eğitimlerini tüm üreticilerle çalıştır; yüksek dev sınıf oranı
-      görülen üreticilerde sınıf dengeleme/örnekleme planını uygula.
+- [x] Holdout dev splitlerinde yüksek sınıf oranını tespit edip holdout dışı
+      train kayıtlarıyla deterministik sınıf dengelemesi uygula.
+- [ ] Holdout eğitimlerini tüm üreticilerle çalıştır.
 - [x] Temiz ses ve telefon kanalı manifestlerini ayrı tut.
 - [x] Veri kaynakları ve kayıt sayılarını manifest doğrulamasında raporla.
 - [x] Sentetik sınıf dengesini manifest doğrulamasında kontrol et; yüksek oranı
@@ -160,6 +161,26 @@ işlem beklenen şekilde açık hata veriyor. FLEURS, MLAAD ve Girenit kaynaklar
 Collective erişimi olan resmi arşivin indirilmesinden sonra tamamlanacak;
 bu dış veri erişimi gereksinimi kod veya mevcut WAV’lar üzerinden çözülebilecek
 bir eksiklik değildir.
+
+#### TTS üreticisi holdout dengeleme raporu
+
+Yedi üretici için holdout manifestleri üretildi: `OmniVoice`, `VoxCPM2`,
+`FreyaTTS`, `bark`, `xtts_v1.1`, `xtts_v2` ve `glow-tts`. Her akışta eşleşen
+üreticinin tüm kayıtları test splitine taşınıyor; böylece testte görülmemiş
+üretici koşulu korunuyor.
+
+İlk doğrulamada `xtts_v2` ve `glow-tts` holdout’larında dev splitindeki
+sentetik kayıt sayısı azaldığı için sırasıyla 29.92:1 ve 22.44:1 sınıf oranları
+görüldü. `create_turkish_manifest.py` artık bu durumu deterministik biçimde
+ele alıyor: yalnızca holdout dışında kalan train sentetik kayıtlarını dev’e
+taşıyor ve doğrulama sınırı olan 20:1 oranını karşılayacak minimum örnek sayısını
+sağlıyor. Held-out üreticinin kayıtları asla train veya dev’e geri alınmıyor.
+
+Son doğrulama sonucunda yedi manifestin tamamı `validate_manifest.py` ile
+başarılı oldu. `xtts_v2` ve `glow-tts` için gerekli dengeleme uygulanırken
+train/dev kayıt sayıları değişti; diğer holdout manifestlerinin split yapısı
+değişmedi. Bu hazırlık adımı tamamlandı, üretici bazlı eğitimlerin çalıştırılması
+P0’da kalan iştir.
 
 ### P1 — Sentetik veri ve telefon koşulları
 
