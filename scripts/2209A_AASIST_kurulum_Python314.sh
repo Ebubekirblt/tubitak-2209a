@@ -57,7 +57,7 @@ python -m pip install \
   numpy scipy soundfile librosa soxr \
   scikit-learn pandas pyarrow datasets huggingface_hub \
   matplotlib tqdm pyyaml tensorboard \
-  transformers accelerate evaluate
+  transformers accelerate evaluate gdown
 
 # Resmî AASIST eğitim kodu SWA için bu eski paketi kullanır.
 # Python 3.14'te desteği garanti olmadığından isteğe bağlıdır;

@@ -23,7 +23,7 @@ eder.
 | GSM / AMR-NB | 🔴 Encoder ve deney bekliyor |
 | macOS MPS | ✅ Forward testi başarılı |
 | Windows CUDA | 🟡 Gerçek cihaz testi bekliyor |
-| Akademik metrikler | 🔴 EER/AUC/F1 raporlama bekliyor |
+| Akademik metrikler | ✅ EER/AUC/F1 ve sınıflandırma metrikleri yazılıyor |
 | Inference CLI/API | 🔴 Başlanmadı |
 
 ## Tamamlananlar
@@ -107,7 +107,8 @@ eder.
 - [x] ROC-AUC, F1, precision, recall ve balanced accuracy hesaplama ekle.
 - [x] Confusion matrix üretimini `metrics.json` içine ekle.
 - [ ] Model, üretici ve codec bazlı sonuç tabloları oluştur.
-- [ ] Sonuçları `metrics.json` ve özet CSV/JSON dosyalarına yaz.
+- [x] Temel sonuçları `metrics.json` içine yaz.
+- [ ] Model, üretici ve codec bazlı özet CSV/JSON dosyaları oluştur.
 - [ ] Deneylerde Git commit hash ve veri manifest hash bilgisini sakla.
 
 ### P2 — Kullanım ve dağıtım
@@ -124,14 +125,13 @@ eder.
 İlk uygulanacak sıra:
 
 1. Konuşmacı-disjoint split üret.
-2. EER/AUC/F1 değerlendirme modülünü ekle.
-3. AASIST temiz kanal baseline eğit.
-4. AASIST G.711/Opus telefon kanalı deneyini yap.
-5. TTS üreticisi-disjoint testleri çalıştır.
-6. RawNet2, RawGAT-ST ve XLS-R sonuçlarını aynı tabloya koy.
-7. Synthetic Turkish TTS parquet entegrasyonunu tamamla.
-8. GSM/AMR-NB deneylerini uygun encoder ortamında yap.
-9. En iyi model için inference CLI oluştur.
+2. AASIST temiz kanal baseline eğit.
+3. AASIST G.711/Opus telefon kanalı deneyini yap.
+4. TTS üreticisi-disjoint testleri çalıştır.
+5. RawNet2, RawGAT-ST ve XLS-R sonuçlarını aynı tabloya koy.
+6. Synthetic Turkish TTS parquet entegrasyonunu tamamla.
+7. GSM/AMR-NB deneylerini uygun encoder ortamında yap.
+8. En iyi model için inference CLI oluştur.
 
 ## Deney başarı ölçütleri
 

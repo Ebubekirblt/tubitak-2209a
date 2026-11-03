@@ -46,6 +46,9 @@ def main() -> int:
         if tuple(logits.shape) != (1, 2):
             raise RuntimeError(f"{name}: unexpected output shape {tuple(logits.shape)}")
         print(f"{name}: OK {tuple(logits.shape)} device={device}")
+        del model
+        if device.type == "mps":
+            torch.mps.empty_cache()
     return 0
 
 

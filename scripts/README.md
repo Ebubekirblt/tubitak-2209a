@@ -56,6 +56,8 @@ python scripts/mlaad_tr_dilimli_indir.py --all
 
 Tam MLAAD indirmesi büyük olabilir. Hugging Face kimlik doğrulaması
 gerekiyorsa token’ı script içine yazmadan `hf auth login` kullanın.
+`gdown`, yalnızca `-IncludeASR` ile istenen opsiyonel TurkicASR arşivi için
+kurulur; ana Türkçe sahtecilik akışı için gerekli değildir.
 
 ## Eğitim ve doğrulama
 
