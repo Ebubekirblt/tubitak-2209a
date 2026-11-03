@@ -2,6 +2,7 @@
 """Create a train/dev/test JSONL manifest from local Turkish WAV datasets."""
 
 import argparse
+import csv
 import json
 import tarfile
 from collections import defaultdict
@@ -53,6 +54,35 @@ def generator_for(path: Path, root: Path) -> str:
     return dataset
 
 
+def speaker_metadata(root: Path) -> dict[str, str]:
+    metadata = {}
+    for tsv in root.glob("FLEURS_TR/data/tr_tr/*.tsv"):
+        with tsv.open(encoding="utf-8") as handle:
+            for row in csv.reader(handle, delimiter="\t"):
+                if len(row) >= 2 and row[0] != "id":
+                    metadata[str((tsv.parent / "audio" / tsv.stem / row[1]).resolve())] = (
+                        f"FLEURS_TR/{row[0]}"
+                    )
+    for csv_path in root.glob("girenit-tts-tr-synthetic/*/metadata.csv"):
+        with csv_path.open(encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle):
+                speaker = row.get("reference_speaker") or row.get("teacher_model")
+                if row.get("file_name") and speaker:
+                    metadata[str((csv_path.parent / row["file_name"]).resolve())] = (
+                        f"girenit/{speaker}"
+                    )
+    for meta in root.glob("MLAAD/fake/tr/*/meta.csv"):
+        with meta.open(encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle, delimiter="|"):
+                relative = row.get("path", "")
+                speaker = row.get("model_name")
+                if relative and speaker:
+                    metadata[str((root / "MLAAD" / relative).resolve())] = (
+                        f"MLAAD/{speaker}"
+                    )
+    return metadata
+
+
 def extract_archives(root: Path) -> None:
     for archive in root.rglob("*.tar.gz"):
         target = archive.parent
@@ -80,6 +110,12 @@ def main() -> int:
         help="Create deterministic group-disjoint splits; requires speaker_id metadata",
     )
     parser.add_argument(
+        "--exclude-source",
+        action="append",
+        default=[],
+        help="Exclude a source name; repeat for multiple sources",
+    )
+    parser.add_argument(
         "--holdout-generator",
         help="Move matching generator records to test for unseen-generator evaluation",
     )
@@ -88,6 +124,7 @@ def main() -> int:
     if args.extract_archives:
         extract_archives(args.root)
     metadata_by_path = {}
+    speaker_by_filename = speaker_metadata(args.root)
     source_manifests = (
         args.root / "commonvoice_tr_manifest.jsonl",
         args.root / "commonvoice_17_tr_fixed" / "commonvoice_tr_manifest.jsonl",
@@ -119,6 +156,10 @@ def main() -> int:
         source_metadata = metadata_by_path.get(resolved_path, {})
         if source_metadata.get("speaker_id"):
             record["speaker_id"] = source_metadata["speaker_id"]
+        elif resolved_path in speaker_by_filename:
+            record["speaker_id"] = speaker_by_filename[resolved_path]
+        if source in args.exclude_source:
+            continue
         records.append(record)
     if not records:
         raise SystemExit("No WAV files found. Download/extract Turkish datasets first.")
@@ -133,23 +174,49 @@ def main() -> int:
             )
         groups = defaultdict(list)
         for record in records:
-            groups[(record["label"], record["speaker_id"])].append(record)
-        for label in (0, 1):
-            label_groups = sorted(
-                (items for (group_label, _), items in groups.items() if group_label == label),
-                key=lambda items: items[0]["speaker_id"],
+            groups[record["speaker_id"]].append(record)
+        speaker_groups = sorted(groups.values(), key=lambda items: items[0]["speaker_id"])
+        by_label = defaultdict(list)
+        for items in speaker_groups:
+            dominant_label = max(
+                (0, 1),
+                key=lambda label: sum(record["label"] == label for record in items),
             )
-            total = sum(len(items) for items in label_groups)
-            boundaries = (total * 0.8, total * 0.9)
-            seen = 0
-            for items in label_groups:
-                midpoint = seen + len(items) / 2
-                split = "train" if midpoint <= boundaries[0] else (
-                    "dev" if midpoint <= boundaries[1] else "test"
+            by_label[dominant_label].append(items)
+        for label_groups in by_label.values():
+            if len(label_groups) < 3:
+                raise SystemExit(
+                    "Speaker-disjoint split requires at least three speaker groups "
+                    "for each label"
                 )
+            ordered = sorted(label_groups, key=lambda items: items[0]["speaker_id"])
+            assignments = {}
+            for index, items in enumerate(ordered):
+                if index == 0:
+                    split = "train"
+                elif index == 1:
+                    split = "dev"
+                elif index == 2:
+                    split = "test"
+                else:
+                    split = "train"
+                assignments[id(items)] = split
+            for items in ordered[3:]:
+                assignments[id(items)] = min(
+                    ("train", "dev", "test"),
+                    key=lambda split: (
+                        sum(
+                            len(group)
+                            for group in ordered
+                            if assignments.get(id(group)) == split
+                        ),
+                        split,
+                    ),
+                )
+            for items in ordered:
+                split = assignments[id(items)]
                 for record in items:
                     record["split"] = split
-                seen += len(items)
     for label in (0, 1):
         if args.speaker_disjoint:
             continue
@@ -175,6 +242,10 @@ def main() -> int:
             record["split"] = "test"
     for missing in ("dev", "test"):
         if not any(record["split"] == missing for record in records):
+            if args.speaker_disjoint:
+                raise SystemExit(
+                    f"Speaker-disjoint split could not create {missing} without leakage"
+                )
             candidates = [record for record in records if record["split"] == "train"]
             if not candidates:
                 raise SystemExit(f"Cannot create {missing} split from the discovered audio")
@@ -182,6 +253,11 @@ def main() -> int:
     for split in ("dev", "test"):
         labels = {record["label"] for record in records if record["split"] == split}
         for label in {0, 1} - labels:
+            if args.speaker_disjoint:
+                raise SystemExit(
+                    f"Speaker-disjoint {split} split is missing label {label}; "
+                    "adjust source grouping or provide more speaker groups"
+                )
             candidates = [
                 record for record in records
                 if record["split"] == "train"

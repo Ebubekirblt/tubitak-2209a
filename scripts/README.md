@@ -45,6 +45,7 @@ python scripts/create_phone_channel_manifest.py
 --extract-archives
 --holdout-generator NAME
 --speaker-disjoint
+--exclude-source SOURCE
 ```
 
 Speaker-disjoint deney için kaynak metadata ile yeniden manifest üretin:
@@ -58,6 +59,22 @@ python scripts/validate_manifest.py \
   --require-speaker-id \
   --speaker-disjoint
 ```
+
+Mevcut Common Voice kopyasında `client_id` bulunmadığı için güvenilir
+speaker-disjoint alt kümesi üretmek için bu kaynağı dışarıda bırakın:
+
+```bash
+python scripts/create_turkish_manifest.py \
+  --speaker-disjoint \
+  --exclude-source commonvoice_17_tr_fixed \
+  --output dataset/turkish_speaker_disjoint_manifest.jsonl
+```
+
+Tam veri için Common Voice’in `client_id` içeren kaynağını Mozilla Data
+Collective’den indirip metadata ile yeniden dışa aktarın. `client_id` yoksa
+dosya adına veya akustik benzerliğe dayalı sahte speaker ID üretmeyin.
+Mevcut metadata’lı alt kümenin doğrulama sonucu yaklaşık 11.899 kayıt ve
+split’ler arası sıfır speaker overlap’tir.
 
 Common Voice ve MLAAD örnekleri:
 

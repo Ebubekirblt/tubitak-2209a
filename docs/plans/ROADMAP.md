@@ -74,9 +74,14 @@ eder.
 ### P0 — Deney güvenilirliği
 
 - [x] Speaker metadata taşıma ve speaker-disjoint split doğrulama akışını ekle.
-- [ ] Mevcut WAV’leri `client_id` metadata’sı sağlayan Common Voice kaynağından
-      yeniden dışa aktar. Mevcut `ysdede/commonvoice_17_tr_fixed` kaynağında
-      `client_id` alanı bulunmadığı için speaker-disjoint split henüz üretilemez.
+- [x] FLEURS/MLAAD/Girenit metadata’sından speaker gruplarını manifest’e taşı.
+- [x] Metadata’sı olmayan Common Voice’i speaker-disjoint alt kümesinden
+      açıkça dışlama seçeneği ekle.
+- [x] Common Voice dışı 11.899 kayıtla leakage-free speaker-disjoint manifest
+      üretimini ve doğrulamasını çalıştır.
+- [ ] Common Voice’i `client_id` metadata’sı sağlayan resmi Mozilla Data
+      Collective arşivinden yeniden dışa aktar ve tam speaker-disjoint split’i
+      üret. Mevcut `ysdede/commonvoice_17_tr_fixed` kopyası bu alanı içermiyor.
 - [x] `--holdout-generator` ile TTS üreticisi-disjoint deney akışını doğrula.
 - [x] Yedi TTS üreticisi için holdout manifestlerini üret ve doğrula.
 - [ ] Holdout eğitimlerini tüm üreticilerle çalıştır; yüksek dev sınıf oranı

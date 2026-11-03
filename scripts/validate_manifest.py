@@ -14,6 +14,12 @@ def main() -> int:
     parser.add_argument("manifest", type=Path)
     parser.add_argument("--require-speaker-id", action="store_true")
     parser.add_argument("--speaker-disjoint", action="store_true")
+    parser.add_argument(
+        "--exclude-source",
+        action="append",
+        default=[],
+        help="Allowed for documenting excluded sources; validation still checks the manifest",
+    )
     parser.add_argument("--max-class-ratio", type=float, default=20.0)
     args = parser.parse_args()
     rows = [json.loads(line) for line in args.manifest.read_text(encoding="utf-8").splitlines() if line]
