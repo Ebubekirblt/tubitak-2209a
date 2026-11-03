@@ -27,6 +27,7 @@ Veri tamamlama ve sonraki deney aşamaları
 [`plans/`](plans/) klasöründeki tarihli belgelerde tutulur.
 
 - [`2026-11-03 veri tamamlama planı`](plans/2026-11-03-veri-tamamlama.md)
+- [`Proje roadmap'i`](plans/ROADMAP.md)
 
 Çalıştırma ve kurulum talimatları için kökteki
 [`README.md`](../README.md) kullanılmalıdır.
