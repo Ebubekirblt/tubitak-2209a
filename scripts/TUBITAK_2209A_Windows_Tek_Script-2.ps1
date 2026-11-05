@@ -46,6 +46,9 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'Continue'
 $Root = [System.IO.Path]::GetFullPath($Root)
 $Venv = Join-Path $Root '.venv-aasist-py314'
+if (-not (Test-Path $Venv) -and (Test-Path (Join-Path $Root '.venv\Scripts\python.exe'))) {
+    $Venv = Join-Path $Root '.venv'
+}
 $Py = Join-Path $Venv 'Scripts\python.exe'
 $HF = Join-Path $Venv 'Scripts\hf.exe'
 $DataDir = Join-Path $Root 'dataset'
@@ -97,6 +100,8 @@ function Find-Python314 {
     $pyLauncher = Find-CommandPath 'py.exe'
     if ($pyLauncher) { $candidates += ,@($pyLauncher, '-3.14') }
     $paths = @(
+        (Join-Path $Venv 'Scripts\python.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Python\pythoncore-3.14-64\python.exe'),
         (Join-Path $env:LOCALAPPDATA 'Programs\Python\Python314\python.exe'),
         'C:\Program Files\Python314\python.exe',
         'C:\Python314\python.exe'
@@ -111,7 +116,7 @@ function Find-Python314 {
         $prefix = @()
         if ($c.Count -gt 1) { $prefix = @([string]$c[1]) }
         try {
-            $version = & $exe @prefix -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>$null
+            $version = & $exe @prefix -c 'import sys; print(str(sys.version_info.major)+chr(46)+str(sys.version_info.minor))' 2>$null
             if ($LASTEXITCODE -eq 0 -and "$version".Trim() -eq '3.14') { return ,$c }
         } catch { }
     }
